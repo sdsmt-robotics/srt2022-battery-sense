@@ -48,7 +48,7 @@ uint32_t SRTBatterySense::sampleADC()
 
 float SRTBatterySense::adcToBatteryVoltage(uint32_t adc)
 {
-  return (m * adc / 100000 + b) * vSenseAdjust;
+  return map(adc, adc1, adc2, v1, v2);
 }
 
 float SRTBatterySense::getRollingAverage()
