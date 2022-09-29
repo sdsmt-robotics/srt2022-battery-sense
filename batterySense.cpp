@@ -2,7 +2,7 @@
 
 SRTBatterySense::SRTBatterySense(int _sensePin,
                                  int _calibrationPinLow = A3,
-                                 int _calibrationPinHigh = A6)
+                                 int _calibrationPinHigh = A6):rollingavg(BATTERY_CHECK_NUM_SAMPLES)
 {
   sensePin = _sensePin;
   calibrationPinLow = _calibrationPinLow;
@@ -19,10 +19,7 @@ void SRTBatterySense::init()
   EEPROM.get(4, adc2);
   EEPROM.end();
 
-  for (int i = 0; i < BATTERY_CHECK_NUM_SAMPLES; i++)
-  {
-    batteryCheckSamples[i] = 7.2;
-  }
+  rollingavg.reset(7.2);
 }
 
 void SRTBatterySense::calibrate()
@@ -126,23 +123,24 @@ float SRTBatterySense::calculateVoltage(uint32_t rawADC)
 
 float SRTBatterySense::getRollingAverage()
 {
-  if (millis() > batteryCheckPrevTime + BATTERY_CHECK_PERIOD || batteryCheckPrevTime == 0)
-  {
-    batteryCheckSamples[batteryCheckAverageIndex++] = getBatteryVoltage();
-    if (batteryCheckAverageIndex = BATTERY_CHECK_NUM_SAMPLES)
-    {
-      batteryCheckAverageIndex = 0;
-    }
+  //Dustin this code is a dumpster fire and you should be ashamed (JK)
+  //if (millis() > batteryCheckPrevTime + BATTERY_CHECK_PERIOD || batteryCheckPrevTime == 0)
+  //{
+  //  batteryCheckSamples[batteryCheckAverageIndex++] = getBatteryVoltage();
+  //  if (batteryCheckAverageIndex == BATTERY_CHECK_NUM_SAMPLES)
+  //  {
+  //    batteryCheckAverageIndex = 0;
+  //  }
+  //
+  //  batteryCheckSum = 0;
+  //  for (int i = 0; i < BATTERY_CHECK_NUM_SAMPLES; i++)
+  //  {
+  //    batteryCheckSum += batteryCheckSamples[i];
+  //  }
+  //  batteryCheckAverage = batteryCheckSum / BATTERY_CHECK_NUM_SAMPLES;
+  //
+  //  batteryCheckPrevTime = millis();
+  //}
 
-    batteryCheckSum = 0;
-    for (int i = 0; i < BATTERY_CHECK_NUM_SAMPLES; i++)
-    {
-      batteryCheckSum += batteryCheckSamples[i];
-    }
-    batteryCheckAverage = batteryCheckSum / BATTERY_CHECK_NUM_SAMPLES;
-
-    batteryCheckPrevTime = millis();
-  }
-
-  return batteryCheckAverage;
+  return rollingavg.filter(getBatteryVoltage());
 }

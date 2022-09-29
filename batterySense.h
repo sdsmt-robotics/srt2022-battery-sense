@@ -68,7 +68,7 @@ To calibrate the ADC using this class, call calibrate() after calling
 
 #include <Arduino.h>
 #include <EEPROM.h>
-
+#include "Filter.h"
 
 class SRTBatterySense
 {
@@ -103,16 +103,20 @@ private:
   float calculateVoltage(uint32_t rawADC);
   uint32_t sampleADC();
 
-  uint64_t batteryCheckPrevTime = 0;
+  //uint64_t batteryCheckPrevTime = 0;
   static const int BATTERY_CHECK_NUM_SAMPLES = 10; //number of battery reading samples to average
-  const uint32_t BATTERY_CHECK_PERIOD = 1000; //time between battery checks, in milliseconds
-  int batteryCheckAverageIndex = 0;
-  float batteryCheckSum = 0;
-  float batteryCheckAverage = 0;
-  float batteryCheckSamples[BATTERY_CHECK_NUM_SAMPLES];
+  //const uint32_t BATTERY_CHECK_PERIOD = 1000; //time between battery checks, in milliseconds
+  //int batteryCheckAverageIndex = 0;
+  //float batteryCheckSum = 0;
+  //float batteryCheckAverage = 0;
+  //float batteryCheckSamples[BATTERY_CHECK_NUM_SAMPLES];
+  Filter rollingavg;
+
 
 public:
-  SRTBatterySense(int _sensePin);
+  SRTBatterySense(int _sensePin,
+                  int _calibrationPinLow,
+                  int _calibrationPinHigh);
   void init();
   void calibrate();
   float getBatteryVoltage();
