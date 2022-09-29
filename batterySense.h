@@ -67,6 +67,8 @@ To calibrate the ADC using this class, call calibrate() after calling
 #define __SRT_BATTERY_SENSE
 
 #include <Arduino.h>
+#include <EEPROM.h>
+
 
 class SRTBatterySense
 {
@@ -75,12 +77,6 @@ private:
   const float r1 = 22000;
   const float r2 = 10000;
   const float vSenseAdjust = (r2 + r1) / r2;
-
-  //set these to two different points measured with a multimeter to calibrate the ADC
-  const int adc1 = 631;
-  const float v1 = 0.665;
-  const int adc2 = 2611;
-  const float v2 = 2.294;
   
   const float m = (float)(v2 - v1) * 100000 / (float)(adc2 - adc1);
   const float b = v2 - m * adc2 / 100000;
@@ -88,7 +84,23 @@ private:
   int sensePin;
   const int NUM_BATTERY_SAMPLES = 200;
 
-  float adcToBatteryVoltage(uint32_t adc);
+
+  //calibration settings
+  int calibrationPinLow = A3;
+  int calibrationPinHigh = A6;
+  const int calibrationReadings = 5;
+  int adc1 = 0;  // these are loaded during init
+  int adc2 = 0;
+  const float v1 = 1.16;
+  const float v2 = 2.0;
+  const float ADCSteps = 4095;
+  const float ADCMaxVol = 3.3;
+  const float volDivRatio = 10/(10 + 22.0);
+
+
+
+  //float adcToBatteryVoltage(uint32_t adc);
+  float calculateVoltage(uint32_t rawADC);
   uint32_t sampleADC();
 
   uint64_t batteryCheckPrevTime = 0;
