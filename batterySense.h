@@ -74,12 +74,12 @@ class SRTBatterySense
 {
 private:
   //set r1 and r2 to equal your voltage divider resistor values
-  const float r1 = 22000;
-  const float r2 = 10000;
-  const float vSenseAdjust = (r2 + r1) / r2;
+  //const float r1 = 22000;
+  //const float r2 = 10000;
+  //const float vSenseAdjust = (r2 + r1) / r2;
   
-  const float m = (float)(v2 - v1) * 100000 / (float)(adc2 - adc1);
-  const float b = v2 - m * adc2 / 100000;
+  //const float m = (float)(v2 - v1) * 100000 / (float)(adc2 - adc1);
+  //const float b = v2 - m * adc2 / 100000;
 
   int sensePin;
   const int NUM_BATTERY_SAMPLES = 200;
