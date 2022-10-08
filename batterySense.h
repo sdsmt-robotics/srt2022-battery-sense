@@ -91,8 +91,8 @@ private:
   const int calibrationReadings = 5;
   int adc1 = 0;  // these are loaded during init
   int adc2 = 0;
-  const float v1 = (3.3* ((10.0)/(10.0+10.0+10.0));
-  const float v2 = (3.3* ((10.0+10.0)/(10.0+10.0+10.0));
+  const float v1 = (3.3* ((10.0)/(10.0+10.0+10.0)));
+  const float v2 = (3.3* ((10.0+10.0)/(10.0+10.0+10.0)));
   const float ADCSteps = 4095;
   const float ADCMaxVol = 3.3;
   const float volDivRatio = 10/(10 + 22.0);
